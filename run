@@ -1,0 +1,2 @@
+#!bash -ex
+exec bundle exec ruby main.rb -p 3000
