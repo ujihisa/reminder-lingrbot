@@ -1,2 +1,2 @@
 #!/bin/bash -ex
-exec bundle exec ruby main.rb -p 3000
+exec bundle exec ruby main.rb -p 3000 -o 0.0.0.0
