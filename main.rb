@@ -41,8 +41,8 @@ post '/' do
   message = data.dig('events', 0, 'message')
 
   if message && MESSAGES_FOR_ROOM.key?(room)
+    LAST_POST_TIMES[room] ||= Time.now # assume there was a post right at the restart time
     last_post_time = LAST_POST_TIMES[room]
-    last_post_time ||= Time.now # assume there was a post right at the restart time
     if Time.parse(message['timestamp']) - last_post_time > 24 * 60 * 60
       LAST_POST_TIMES[room] = Time.now
       MESSAGES_FOR_ROOM[room]
