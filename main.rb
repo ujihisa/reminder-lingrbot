@@ -7,9 +7,9 @@ META_INFO = {
   started_at: Time.now.to_s,
 }
 MESSAGES_FOR_ROOM = {
-  'vim': 'https://vim-jp.org/docs/chat.html',
-  'clojure': 'Clojure',
-  'mcujm': ENV['MCUJM_MESSAGE'],
+  'vim' => 'https://vim-jp.org/docs/chat.html',
+  'clojure' => 'Clojure',
+  'mcujm' => ENV['MCUJM_MESSAGE'],
 }
 
 LAST_POST_TIMES = {}
@@ -42,7 +42,7 @@ post '/' do
 
   if message && MESSAGES_FOR_ROOM.key?(room)
     last_post_time = LAST_POST_TIMES[room]
-    last_post_time ||= Time.now - 0 # 30 * 60 # silent for 30min after restart
+    last_post_time ||= Time.now # assume there was a post right at the restart time
     if Time.parse(message['timestamp']) - last_post_time > 24 * 60 * 60
       MESSAGES_FOR_ROOM[room]
     end
