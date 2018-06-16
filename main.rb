@@ -6,7 +6,7 @@ warn('$BOT_VERIFIER is missing') unless ENV['BOT_VERIFIER']
 begin
   text = 'reminder-lingrbot started. See the latest changes https://github.com/ujihisa/reminder-lingrbot/commits/master'
   result = Net::HTTP.get(
-    URI("http://lingr.com/api/room/say?room=clojure&text=#{text}&bot=reminder&bot_verifier=#{ENV['BOT_VERIFIER']}"))
+    URI("http://lingr.com/api/room/say?room=mcujm&text=#{text}&bot=reminder&bot_verifier=#{ENV['BOT_VERIFIER']}"))
   p result
 rescue => e
   warn("#{e.backtrace[0]}: #{e.message} (#{e.class})")
