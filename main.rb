@@ -1,5 +1,16 @@
 require 'time'
+require 'net/http'
 require 'sinatra'
+
+warn('$BOT_VERIFIER is missing') unless ENV['BOT_VERIFIER']
+begin
+  text = 'reminder-lingrbot started'
+  result = Net::HTTP.get(
+    URI("http://lingr.com/api/room/say?room=clojure&text=#{text}&bot=reminder&bot_verifier=#{ENV['BOT_VERIFIER']}"))
+  p result
+rescue => e
+  warn("#{e.backtrace[0]}: #{e.message} (#{e.class})")
+end
 
 META_INFO = {
   RUBY_DESCRIPTION: RUBY_DESCRIPTION,
@@ -9,7 +20,7 @@ META_INFO = {
 MESSAGES_FOR_ROOM = {
   'vim' => 'https://vim-jp.org/docs/chat.html',
   'clojure' => 'Clojure',
-  'mcujm' => ENV['MCUJM_MESSAGE'],
+  'mcujm' => ENV['MCUJM_MESSAGE'] || 'Moved! lingr mcujm room is obsolete.',
 }
 
 LAST_POST_TIMES = {}
@@ -41,9 +52,9 @@ post '/' do
   message = data.dig('events', 0, 'message')
 
   if message && MESSAGES_FOR_ROOM.key?(room)
-    LAST_POST_TIMES[room] ||= Time.now - 23*60*60 - 55*60 # assume there was a post 23h55min before restart
+    LAST_POST_TIMES[room] ||= Time.now - 22*60*60 - 58*60 # assume there was a post 22h58min before restart
     last_post_time = LAST_POST_TIMES[room]
-    if Time.parse(message['timestamp']) - last_post_time > 24 * 60 * 60 # every 24 hours
+    if Time.parse(message['timestamp']) - last_post_time > 23 * 60 * 60 # every 23 hours
       LAST_POST_TIMES[room] = Time.now
       MESSAGES_FOR_ROOM[room]
     end
