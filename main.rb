@@ -60,7 +60,7 @@ post '/' do
     last_post_time = LAST_POST_TIMES[room]
     if Time.parse(message['timestamp']) - last_post_time > 23 * 60 * 60 # every 23 hours
       LAST_POST_TIMES[room] = Time.now
-      messages = MESSAGES_FOR_ROOM[room].lines
+      messages = MESSAGES_FOR_ROOM[room].split(';')
       Thread.start do
         messages[1..].each do |message|
           sleep(20)
