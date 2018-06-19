@@ -3,10 +3,14 @@ require 'net/http'
 require 'sinatra'
 
 warn('$BOT_VERIFIER is missing') unless ENV['BOT_VERIFIER']
-begin
-  text = 'reminder-lingrbot started. See the latest changes https://github.com/ujihisa/reminder-lingrbot/commits/master'
-  result = Net::HTTP.get(
+def say_lingr(text)
+  Net::HTTP.get(
     URI("http://lingr.com/api/room/say?room=mcujm&text=#{text}&bot=reminder&bot_verifier=#{ENV['BOT_VERIFIER']}"))
+end
+
+begin
+  result = say_lingr(
+    'reminder-lingrbot started. See the latest changes https://github.com/ujihisa/reminder-lingrbot/commits/master')
   p result
 rescue => e
   warn("#{e.backtrace[0]}: #{e.message} (#{e.class})")
@@ -56,7 +60,14 @@ post '/' do
     last_post_time = LAST_POST_TIMES[room]
     if Time.parse(message['timestamp']) - last_post_time > 23 * 60 * 60 # every 23 hours
       LAST_POST_TIMES[room] = Time.now
-      MESSAGES_FOR_ROOM[room]
+      messages = MESSAGES_FOR_ROOM[room].lines
+      Thread.start do
+        messages[1..].each do |message|
+          sleep(20)
+          say_lingr(message)
+        end
+      end
+      messages[0]
     end
   end
 end
