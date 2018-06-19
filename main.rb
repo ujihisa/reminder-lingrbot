@@ -1,9 +1,11 @@
 require 'time'
 require 'net/http'
+require 'erb'
 require 'sinatra'
 
 warn('$BOT_VERIFIER is missing') unless ENV['BOT_VERIFIER']
 def say_lingr(text)
+  text = ERB::Util.url_encode(text)
   Net::HTTP.get(
     URI("http://lingr.com/api/room/say?room=mcujm&text=#{text}&bot=reminder&bot_verifier=#{ENV['BOT_VERIFIER']}"))
 end
