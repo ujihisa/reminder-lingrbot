@@ -10,12 +10,14 @@ def say_lingr(text)
     URI("http://lingr.com/api/room/say?room=mcujm&text=#{text}&bot=reminder&bot_verifier=#{ENV['BOT_VERIFIER']}"))
 end
 
-begin
-  result = say_lingr(
-    'reminder-lingrbot started. See the latest changes https://github.com/ujihisa/reminder-lingrbot/commits/master')
-  p result
-rescue => e
-  warn("#{e.backtrace[0]}: #{e.message} (#{e.class})")
+unless ENV['SILENT']
+  begin
+    result = say_lingr(
+      'reminder-lingrbot started. See the latest changes https://github.com/ujihisa/reminder-lingrbot/commits/master')
+    p result
+  rescue => e
+    warn("#{e.backtrace[0]}: #{e.message} (#{e.class})")
+  end
 end
 
 META_INFO = {
